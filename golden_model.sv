@@ -1,6 +1,6 @@
 //Golden Model for Data Cache
 
-module data_cache_golden #(parameter b = 16, t = 20, i = 8, o = 4)(
+module data_cache_golden #(parameter b = 16, t = 20, i = 8, o = 4)( //Calculations in data sheet
     input logic [31:0] address,
     input logic rw_in, //If rw_in = 1 read, else if rw_in = 0 write
     input logic ar_wr_resp,
@@ -39,6 +39,10 @@ state_t current, next;
 logic tag [t-1:0] = address[31:12];
 logic index [i-1:0] = address[11:4];
 logic offset [o-1:0] = address[3:0];
+
+//Read Hit vs Read Miss Behavior
+
+
 
 
 
