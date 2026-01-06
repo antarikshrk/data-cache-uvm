@@ -5,7 +5,7 @@ parameter data = 11, parameter tag = 20)
     input wire clk,
     input wire rst,
     input logic cache_enable, //Enable the Cache
-    input logic [tag + data:0] write_data, //Write Data to the Cache (Specific Data provided by Controller)
+    input logic [tag + data:0] write_data, //Write Data to the Cache (Includes {updated_valid, updated_tag, updated_data})
     input logic [$clog2(index_count) - 1:0] index_sel, //Index Select
     input logic rd_wr_sel, //Read/Write Select
 
@@ -23,14 +23,18 @@ initial begin
     }
 end
 
+integer i;
 always_ff @(posedge clk) begin
     if (rst) begin
-        cache_data[index_sel][tag+data] = 1'd0; //Reset the Valid bits to 0
+        //cache_data[index_sel][tag+data] = 1'd0; //Reset the Valid bits to 0
+        for (i = 0; i < index_count; i++){
+            cache_data[i][tag+data] <= 1'd0; //Reset the Valid bits to 0
+        }
     end else begin
         if (cache_enable) begin
-            case(rd_wr_sel): //Read = 0, Write = 1
-                1'd0: read_data_reg = cache_data[index_sel][data - 1:0]; //Read Data
-                1'd1: cache_data[index_sel] = write_data ; //Write Data
+            case(rd_wr_sel) //Read = 0, Write = 1
+                1'd0: read_data_reg <= cache_data[index_sel][data - 1:0]; //Read Data
+                1'd1: cache_data[index_sel][tag + data:0] <= write_data ; //Write Data 
             endcase
         end
     end
