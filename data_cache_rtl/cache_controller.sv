@@ -62,6 +62,7 @@ assign index = address[10:3];
 assign index_sel = index;
 assign compare = (input_tag == cache_tag) ? 1 : 0; //Compare the Input and Cache Tag
 assign hit_miss = compare && cache_valid;
+assign hit_miss_o = hit_miss;
 
 typedef enum logic [1:0]{
     IDLE = 2'b00, //Go here when RESET
@@ -91,16 +92,17 @@ always_ff @(posedge clk) begin
                 stall_reg <= 1'd0;
                 mem_req_reg <= 1'd0;
             end
-            ACCESS: begin
+            ACCESS: begin 
                 stall_reg <= 1'd0;
                 mem_req_reg <= 1'd0;
                 cache_enable <= 1'b1; //Enable the Cache
                 if (hit_miss == 1'b1) begin //If it's a hit
                     if (lsu_operator == 1'b1) begin //If it's a write ONLY
                         mem_req_reg <= 1'b1; //Request Memory
-                        if (mem_ready == 1'b1) begin //If handshaking enabled
-                            write_data_int <= cache_data_io; //Send the Data to the DRAM
-                        end
+                        // if (mem_ready == 1'b1) begin //If handshaking enabled
+                        //     write_data_int <= cache_data_io; //Send the Data to the DRAM
+                        // end
+                        write_data_int <= cache_data_io; //Send the Data to the DRAM
                     end
                 end 
                 // else if (hit_miss == 1'b1) begin //If it's a miss
@@ -117,7 +119,6 @@ always_ff @(posedge clk) begin
                 stall_reg <= 1'd1; //Assert Stall
                 cache_enable <= 1'd1;
                 if (mem_req_reg & mem_ready == 1'b1) begin
-                    index_sel <= index;
                     write_index[tag + data] <= 1'b1; //Set to Valid
                     write_index[tag + data - 1:data] <= input_tag; //Update the Tag
                     write_index[data-1:0] <= dram_data_input; //Update the Data
@@ -154,9 +155,9 @@ always_comb begin
             if (!mem_enable) begin
                 next = IDLE; //Go back to IDLE if memory isn't enabled
             end else begin
-                if (hit_miss == 1'b0) begin //If it's a Hit
+                if (mem_ready == 1'b1) begin //If Handshaking enabled, there is a Miss
                     next = MISS_REPAIR;
-                end else if (hit_miss = 1'b1) begin //If it's a Miss
+                end else if (mem_ready == 1'b0) begin //once Handshaking is disabled, go back to Access and try again
                     next = ACCESS;
                 end
             end

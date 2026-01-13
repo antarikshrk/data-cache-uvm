@@ -12,7 +12,7 @@ module dummy_dram #(parameter tag = 20, parameter data = 11)(
 );
 
 localparam memory_length = 1024;    //How many Addresses available in the DRAM
-logic [tag+data:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
+logic [data-1:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
 
 //Create the DRAM Data Array
 initial begin
