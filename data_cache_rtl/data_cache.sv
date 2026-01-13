@@ -8,12 +8,16 @@ parameter data = 11, parameter tag = 20)
     input logic [tag + data:0] write_index, //Write Data to the Cache (Includes {updated_valid, updated_tag, updated_data})
     input logic [$clog2(index_count) - 1:0] index_sel, //Index Select
     input logic rd_wr_sel, //Read/Write Select
+    input logic hit_miss_o, //Hit Miss Output from Cache Controller
 
     output wire [data - 1:0] read_data, //Data being Read from Cache
-    output logic [tag + data - 1: data] cache_tag //The Tag from the Cache
+    output logic [tag + data - 1: data] cache_tag, //The Tag from the Cache
+    output logic [data-1:0] write_data_int, //Write Data to the DRAM
+    output logic cache_valid,
+    output logic [data-1:0] cache_data_io
 );
 
-logic [7:0] cache_data[index_count-1:0]; //256 Lines containing {valid, tag, data}
+logic [tag+data:0] cache_data[index_count-1:0]; //256 Lines containing {valid, tag, data}
 logic [data - 1:0] read_data_reg;
 
 assign read_data = read_data_reg; //For Procedural Block
@@ -34,14 +38,20 @@ always_ff @(posedge clk) begin
     end else begin
         if (cache_enable) begin
             case(rd_wr_sel) //Read = 0, Write = 1
-                1'd0: read_data_reg <= cache_data[index_sel][data - 1:0]; //Read Data
-                1'd1: cache_data[index_sel][tag + data:0] <= write_index ; //Write Data 
+                1'd0: begin
+                    read_data_reg <= cache_data[index_sel][data - 1:0]; //Read Data
+                end
+                1'd1: begin
+                    cache_data[index_sel][tag + data:0] <= write_index ; //Write Data 
+                end
             endcase
         end
     end
 end
 
 assign cache_tag = cache_data[index_sel][tag + data - 1:data];
+assign cache_valid = cache_data[index_sel][tag+data];
+assign cache_data_io = cache_data[index_sel][data-1:0];
 
 
 endmodule

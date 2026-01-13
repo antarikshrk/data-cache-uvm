@@ -1,18 +1,18 @@
 //"dummy" DRAM
-module dummy_dram #(parameter data = 11)(
+module dummy_dram #(parameter tag = 20, parameter data = 11)(
     input wire clk,
     input wire rst,
     input logic [31:0] mem_address, //Memory Address
     input wire lsu_operator, //Either LW or SW
     input logic mem_req, //Request Memory from the DRAM (Also enable DRAM)
-    input logic [data - 1:0] write_data_int, //Write Data to the DRAM
+    input logic [tag+data:0] write_data_int, //Write Data to the DRAM
     output logic mem_ready, //Memory Request Accepted
     output logic [data-1:0] dram_data_out //Output DRAM Data
 
 );
 
 localparam memory_length = 1024;    //How many Addresses available in the DRAM
-logic [data-1:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
+logic [tag+data:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
 
 //Create the DRAM Data Array
 initial begin
@@ -33,10 +33,16 @@ always_ff @(posedge clk) begin
     end else begin
         if (mem_ready) begin //Controlled by the Cache Controller
             case(lsu_operator) //Either LW or SW (LW = 1'd0, SW = 1'd1)
-                1'd0: dram_data_out <= dram_data[mem_address[9:0]]; //Reading the Data out of the DRAM
-                1'd1: dram_data[mem_address[9:0]] <= write_data_int; //Writing the Data into the DRAM
+                1'd0: begin
+                    dram_data_out <= dram_data[mem_address[9:0]]; //Reading the Data out of the DRAM
+                end
+                1'd1: begin
+                    dram_data[mem_address[9:0]] <= write_data_int[data-1:0]; //Writing the Data into the DRAM
+                end
             endcase
-        end      
+        end
     end
 end
+
+
 endmodule 
