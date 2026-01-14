@@ -1,8 +1,11 @@
 //"dummy" DRAM
-module dummy_dram #(parameter tag = 20, parameter data = 11)(
+module dummy_dram #(
+    parameter tag, 
+    parameter data
+)(
     input wire clk,
     input wire rst,
-    input logic [31:0] mem_address, //Memory Address
+    input wire [31:0] address, //Memory Address
     input wire lsu_operator, //Either LW or SW
     input logic mem_req, //Request Memory from the DRAM (Also enable DRAM)
     input logic [tag+data:0] write_data_int, //Write Data to the DRAM
@@ -12,6 +15,7 @@ module dummy_dram #(parameter tag = 20, parameter data = 11)(
 );
 
 localparam memory_length = 1024;    //How many Addresses available in the DRAM
+logic [31:0] mem_address;
 logic [data-1:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
 
 //Create the DRAM Data Array
@@ -22,6 +26,7 @@ initial begin
 end
 
 assign mem_ready = mem_req ? 1 : 0; //The Memory is Ready if there is a Memory request
+assign mem_address = address;
 //Changing Memory handshaking to be more realistic later
 
 integer i;

@@ -1,14 +1,15 @@
 //Data Cache -> Not sure what to do with the Offset
-module data_cache #(parameter index_count = 256,
-parameter data = 11, parameter tag = 20)
-(
+module data_cache #(
+    parameter index_count,
+    parameter data, 
+    parameter tag
+)(
     input wire clk,
     input wire rst,
     input logic cache_enable, //Enable the Cache
     input logic [tag + data:0] write_index, //Write Data to the Cache (Includes {updated_valid, updated_tag, updated_data})
     input logic [$clog2(index_count) - 1:0] index_sel, //Index Select
     input logic rd_wr_sel, //Read/Write Select
-    input logic hit_miss_o, //Hit Miss Output from Cache Controller
 
     output wire [data - 1:0] read_data, //Data being Read from Cache
     output logic [tag + data - 1: data] cache_tag, //The Tag from the Cache
