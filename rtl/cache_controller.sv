@@ -1,4 +1,6 @@
 //Cache Controller
+import cache_pkg::*;
+
 module cache_controller #(
     parameter index_count,
     parameter data, 
@@ -8,7 +10,7 @@ module cache_controller #(
     input wire clk,
     input wire rst,
     input wire [31:0] address, //Address Input
-    input wire lsu_operator, //Either LW or SW
+    input lsu_ops lsu_operator, //Either LW or SW
     input wire mem_enable, //Enable Memory (Cache + DRAM) 
 
     //DRAM inputs
@@ -52,13 +54,12 @@ data_cache #(
     .cache_tag(cache_tag),
     .cache_valid(cache_valid),
     .write_data_int(write_data_int),
-    .cache_data_io(cache_data_io),
+    .cache_data_io(cache_data_io)
 );
 
 logic hit_miss; //Hit = 1, Miss = 0
 logic compare;
 logic [31:0] mem_address;
-//logic [data-1:0] dram_data_input_reg;
 logic stall_reg;
 logic [tag-1:0] input_tag; //Derived from the Address
 logic mem_req_reg;
@@ -77,7 +78,6 @@ assign hit_miss = compare && cache_valid;
 typedef enum logic [1:0]{
     IDLE = 2'b00, //Go here when RESET
     ACCESS = 2'b01, //When Memory is enabled go here
-    // HIT = 2'b10,   //hit_miss = 1
     MISS_REPAIR = 2'b10 //hit_miss = 0
 } state_t;
 state_t current, next;
@@ -107,7 +107,7 @@ always_ff @(posedge clk) begin
                 mem_req_reg <= 1'd0;
                 cache_enable <= 1'b1; //Enable the Cache
                 if (hit_miss == 1'b1) begin //If it's a hit
-                    if (lsu_operator == 1'b1) begin //If it's a write ONLY
+                    if (lsu_operator == SW) begin //If it's a write ONLY
                         mem_req_reg <= 1'b1; //Request Memory
                         // if (mem_ready == 1'b1) begin //If handshaking enabled
                         //     write_data_int <= cache_data_io; //Send the Data to the DRAM
@@ -115,15 +115,7 @@ always_ff @(posedge clk) begin
                         write_data_int <= cache_data_io; //Send the Data to the DRAM
                     end
                 end 
-                // else if (hit_miss == 1'b1) begin //If it's a miss
-                //     cache_enable <= 1'd1; //Fetch Data from the Cache
-                // end
             end
-            // HIT: begin
-            //     stall_reg <= 1'd0;
-            //     mem_req_req <= 1'd0;
-            //     cache_enable <= 1'd1; //Fetch the Data from the Cache  
-            // end
             MISS_REPAIR: begin 
                 mem_req_reg <= 1'b1;
                 stall_reg <= 1'd1; //Assert Stall

@@ -1,17 +1,19 @@
 //Cache Top Level File -> Instantiating Cache Controller <-> DRAM
+import cache_pkg::*;
+
 module cache_level_top #(
-    parameter INDEX_COUNT = 256,
-    parameter DATA_WIDTH = 11,
-    parameter TAG_WIDTH = 20
+    parameter INDEX_COUNT = cache_pkg::INDEX_COUNT,
+    parameter DATA_WIDTH = cache_pkg::DATA_WIDTH,
+    parameter TAG_WIDTH = cache_pkg::TAG_WIDTH
 )(
     input wire clk,
     input wire rst,
     input wire [31:0] address,
-    input wire lsu_operator,
+    input lsu_ops lsu_operator,
     input wire mem_enable,
 
     output wire stall,
-    output wire [data-1:0] read_data
+    output wire [DATA_WIDTH-1:0] read_data
 );
 
 //Internal wires that connect controller and DRAM
