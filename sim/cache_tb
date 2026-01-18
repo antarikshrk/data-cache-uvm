@@ -7,6 +7,7 @@ module cache_tb;
     reg [31:0] address;
     lsu_ops lsu_operator;
     reg mem_enable;
+    reg write_data;
 
     //Outputs to the pipeline
     wire stall;
@@ -24,6 +25,7 @@ module cache_tb;
         .address(address),
         .lsu_operator(lsu_operator),
         .mem_enable(mem_enable),
+        .write_data(write_data),
         .stall(stall),
         .read_data(read_data)
     );
@@ -49,7 +51,7 @@ module cache_tb;
         #10; //Wait another 10ns
 
         assert (stall == 1'd0 && read_data == 1'd0) 
-            else $error("TEST 1 Failed: stall expected = 1, stall actual = %0d, read data = 0%0h");
+            else $error("TEST 1 Failed: stall expected = 1, stall actual = %0d, read data = 0%0h", stall, read_data);
         $display("TEST 1 PASSED");
 
         // ═══════════════════════════════════════════════════════════
