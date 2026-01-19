@@ -11,6 +11,7 @@ module cache_level_top #(
     input wire [31:0] address,
     input lsu_ops lsu_operator,
     input wire mem_enable,
+    input wire [31:0] write_data,
 
     output wire stall,
     output wire [DATA_WIDTH-1:0] read_data
@@ -33,6 +34,7 @@ cache_controller #(
     .rst(rst),
     .address(address),
     .lsu_operator(lsu_operator),
+    .write_data(write_data),
     .mem_enable(mem_enable),
     .mem_ready(mem_ready),
     .dram_data_input(dram_data_in),

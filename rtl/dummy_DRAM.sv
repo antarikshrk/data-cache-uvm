@@ -23,7 +23,7 @@ logic [data-1:0] dram_data[0:memory_length-1]; //Fill in DRAM lines with Data
 //Create the DRAM Data Array
 initial begin
     for (int addr = 0; addr < memory_length; addr++)
-        dram_data[addr] = 1'd0;
+        dram_data[addr] = {16'hDEAD, addr[15:0]}; //Only implemented for Sanity TB
 end
 
 assign mem_ready = mem_req ? 1 : 0; //The Memory is Ready if there is a Memory request
@@ -34,7 +34,7 @@ integer i;
 always_ff @(posedge clk) begin
     if (rst) begin
         for (i = 0; i < memory_length; i++)
-            dram_data[i] <= 1'd0;
+            dram_data[i] <= {16'hDEAD, addr[15:0]}; //1'd0;
     end else begin
         if (mem_ready) begin //Controlled by the Cache Controller
             case(lsu_operator) //Either LW or SW (LW = 1'd0, SW = 1'd1)

@@ -12,6 +12,7 @@ module cache_controller #(
     input wire [31:0] address, //Address Input
     input lsu_ops lsu_operator, //Either LW or SW
     input wire mem_enable, //Enable Memory (Cache + DRAM) 
+    input wire [tag+data:0] write_data, //Write Data 
 
     //DRAM inputs
     input logic mem_ready, //Memory is Ready from the DRAM
@@ -108,6 +109,7 @@ always_ff @(posedge clk) begin
                 cache_enable <= 1'b1; //Enable the Cache
                 if (hit_miss == 1'b1) begin //If it's a hit
                     if (lsu_operator == SW) begin //If it's a write ONLY
+                        write_data_int <= write_data;
                         mem_req_reg <= 1'b1; //Request Memory
                         // if (mem_ready == 1'b1) begin //If handshaking enabled
                         //     write_data_int <= cache_data_io; //Send the Data to the DRAM
