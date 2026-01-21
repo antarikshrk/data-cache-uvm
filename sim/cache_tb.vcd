@@ -1,0 +1,379 @@
+$date
+	Tue Jan 20 19:41:44 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module cache_tb $end
+$var wire 1 ! stall $end
+$var wire 32 " read_data [31:0] $end
+$var reg 32 # address [31:0] $end
+$var reg 1 $ clk $end
+$var reg 1 % lsu_operator $end
+$var reg 1 & mem_enable $end
+$var reg 1 ' rst $end
+$var reg 32 ( write_data [31:0] $end
+$scope module dut $end
+$var wire 32 ) address [31:0] $end
+$var wire 1 $ clk $end
+$var wire 1 % lsu_operator $end
+$var wire 1 & mem_enable $end
+$var wire 1 ' rst $end
+$var wire 32 * write_data [31:0] $end
+$var wire 32 + write_data_dram [31:0] $end
+$var wire 1 ! stall $end
+$var wire 32 , read_data [31:0] $end
+$var wire 1 - mem_req $end
+$var wire 1 . mem_ready $end
+$var wire 32 / dram_data_in [31:0] $end
+$var parameter 32 0 DATA_WIDTH $end
+$var parameter 32 1 INDEX_COUNT $end
+$var parameter 32 2 TAG_WIDTH $end
+$scope module cache_contrl $end
+$var wire 32 3 address [31:0] $end
+$var wire 1 $ clk $end
+$var wire 1 4 hit_miss $end
+$var wire 8 5 index_sel [7:0] $end
+$var wire 20 6 input_tag [19:0] $end
+$var wire 1 % lsu_operator $end
+$var wire 32 7 mem_address [31:0] $end
+$var wire 1 & mem_enable $end
+$var wire 1 ' rst $end
+$var wire 1 ! stall $end
+$var wire 32 8 write_data [31:0] $end
+$var wire 32 9 read_data [31:0] $end
+$var wire 1 - mem_req $end
+$var wire 1 . mem_ready $end
+$var wire 8 : index [7:0] $end
+$var wire 32 ; dram_data_input [31:0] $end
+$var wire 1 < compare $end
+$var wire 1 = cache_valid $end
+$var wire 20 > cache_tag [19:0] $end
+$var wire 32 ? cache_data_io [31:0] $end
+$var parameter 32 @ data $end
+$var parameter 32 A index_count $end
+$var parameter 32 B tag $end
+$var reg 1 C cache_enable $end
+$var reg 2 D current [1:0] $end
+$var reg 1 - mem_req_reg $end
+$var reg 2 E next [1:0] $end
+$var reg 1 F stall_reg $end
+$var reg 32 G write_data_int [31:0] $end
+$var reg 53 H write_index [52:0] $end
+$scope module dcache $end
+$var wire 1 C cache_enable $end
+$var wire 1 $ clk $end
+$var wire 8 I index_sel [7:0] $end
+$var wire 1 % rd_wr_sel $end
+$var wire 32 J read_data [31:0] $end
+$var wire 1 ' rst $end
+$var wire 53 K write_index [52:0] $end
+$var wire 1 = cache_valid $end
+$var wire 20 L cache_tag [51:32] $end
+$var wire 32 M cache_data_io [31:0] $end
+$var parameter 32 N data $end
+$var parameter 32 O index_count $end
+$var parameter 32 P tag $end
+$var reg 32 Q read_data_reg [31:0] $end
+$var reg 32 R write_data_int [31:0] $end
+$var integer 32 S i [31:0] $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 T index [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$scope module dram $end
+$var wire 32 U address [31:0] $end
+$var wire 1 $ clk $end
+$var wire 1 % lsu_operator $end
+$var wire 32 V mem_address [31:0] $end
+$var wire 1 - mem_req $end
+$var wire 1 ' rst $end
+$var wire 32 W write_data_int [31:0] $end
+$var wire 1 . mem_ready $end
+$var parameter 32 X data $end
+$var parameter 32 Y memory_length $end
+$var parameter 32 Z tag $end
+$var reg 32 [ dram_data_out [31:0] $end
+$var integer 32 \ i [31:0] $end
+$scope begin $ivl_for_loop1 $end
+$var integer 32 ] addr [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b10100 Z
+b10000000000 Y
+b100000 X
+b10100 P
+b100000000 O
+b100000 N
+b10100 B
+b100000000 A
+b100000 @
+b10100 2
+b100000000 1
+b100000 0
+$end
+#0
+$dumpvars
+b10000000000 ]
+bx \
+bx [
+bx W
+b0 V
+b0 U
+b100000000 T
+bx S
+bx R
+bx Q
+b0 M
+b0 L
+bx K
+bx J
+b0 I
+bx H
+bx G
+xF
+bx E
+bx D
+xC
+b0 ?
+b0 >
+0=
+x<
+bx ;
+b0 :
+bx 9
+bx 8
+b0 7
+bx 6
+b0 5
+04
+b0 3
+bx /
+x.
+x-
+bx ,
+bx +
+bx *
+b0 )
+bx (
+1'
+0&
+0%
+0$
+b0 #
+bx "
+x!
+$end
+#5
+0.
+b0 E
+b0 D
+0-
+0!
+0F
+b100000000 S
+b10000000000 \
+1$
+#10
+0$
+#15
+b10000000000 \
+b100000000 S
+1$
+#20
+0$
+0'
+#25
+1$
+#30
+0$
+#35
+1$
+#40
+0$
+#45
+1$
+#50
+b1 5
+b1 I
+b1 :
+0$
+b1000 7
+b1000 V
+b1000 #
+b1000 )
+b1000 3
+b1000 U
+#55
+1$
+#60
+0$
+#65
+1$
+#70
+0$
+#75
+1$
+#80
+b1 E
+0$
+1&
+#85
+b10 E
+b1 D
+1$
+#90
+0$
+#95
+b1 E
+1C
+b10 D
+1$
+#100
+0$
+#105
+1.
+b10 E
+b0 "
+b0 ,
+b0 9
+b0 J
+b0 Q
+b1 D
+1!
+1F
+1-
+1$
+#110
+0$
+#115
+b1 E
+0.
+b11011110101011010000000000001000 /
+b11011110101011010000000000001000 ;
+b11011110101011010000000000001000 [
+0-
+0!
+0F
+b10 D
+1$
+#120
+0$
+#125
+1.
+b10 E
+b1 D
+1!
+1F
+1-
+1$
+#130
+0$
+#135
+b1 E
+0.
+0-
+0!
+0F
+b10 D
+1$
+#140
+0$
+#145
+1.
+b10 E
+b1 D
+1!
+1F
+1-
+1$
+#150
+0$
+#155
+b1 E
+0.
+0-
+0!
+0F
+b10 D
+1$
+#160
+b10 5
+b10 I
+b10 :
+0$
+b11011110101011011101111010101101 (
+b11011110101011011101111010101101 *
+b11011110101011011101111010101101 8
+1%
+b10000 7
+b10000 V
+b10000 #
+b10000 )
+b10000 3
+b10000 U
+#165
+x4
+1.
+bx >
+bx L
+x=
+bx ?
+bx M
+b1 E
+b1 D
+1!
+1F
+1-
+1$
+#170
+0$
+#175
+0.
+0-
+0!
+0F
+1$
+#180
+0$
+#185
+1$
+#190
+0$
+#195
+1$
+#200
+0$
+#205
+1$
+#210
+0$
+#215
+1$
+#220
+0$
+#225
+1$
+#230
+0$
+#235
+1$
+#240
+0$
+#245
+1$
+#250
+0$
+#255
+1$
+#260
+0$

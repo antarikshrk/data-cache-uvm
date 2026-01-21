@@ -1,4 +1,4 @@
-//"dummy" DRAM
+//"dummy" DRAM (Data is inaccurate but filled in with dummy data for testing)
 import cache_pkg::*;
 
 module dummy_dram #(
@@ -10,7 +10,7 @@ module dummy_dram #(
     input wire [31:0] address, //Memory Address
     input lsu_ops lsu_operator, //Either LW or SW
     input logic mem_req, //Request Memory from the DRAM (Also enable DRAM)
-    input logic [tag+data:0] write_data_int, //Write Data to the DRAM
+    input logic [data-1:0] write_data_int, //Write Data to the DRAM
     output logic mem_ready, //Memory Request Accepted
     output logic [data-1:0] dram_data_out //Output DRAM Data
 
@@ -34,7 +34,7 @@ integer i;
 always_ff @(posedge clk) begin
     if (rst) begin
         for (i = 0; i < memory_length; i++)
-            dram_data[i] <= {16'hDEAD, addr[15:0]}; //1'd0;
+            dram_data[i] <= {16'hDEAD, i[15:0]}; //1'd0; 
     end else begin
         if (mem_ready) begin //Controlled by the Cache Controller
             case(lsu_operator) //Either LW or SW (LW = 1'd0, SW = 1'd1)

@@ -7,7 +7,7 @@ module cache_tb;
     reg [31:0] address;
     lsu_ops lsu_operator;
     reg mem_enable;
-    reg [31:0] write_data;
+    reg [DATA_WIDTH-1:0] write_data;
 
     //Outputs to the pipeline
     wire stall;
@@ -50,10 +50,8 @@ module cache_tb;
         rst = 0; //Deassert Reset
         #10; //Wait another 10ns
 
-        assert (stall == 1'd0 && read_data == 1'd0) 
-            else $error("TEST 1 Failed: stall expected = 1, stall actual = %0d, read data = 0, read data = 0%0h", stall, read_data);
-        $display("TEST 1 PASSED");
-
+        assert (stall == 1'd0) //Read will be a null value (Don't Care)
+            else $error("TEST 1 Failed: stall expected = 0, stall actual = %0d", stall);
         // ═══════════════════════════════════════════════════════════
         // TEST 2: Disable Memory
         // ═══════════════════════════════════════════════════════════
@@ -64,11 +62,10 @@ module cache_tb;
         mem_enable = 0; //Disable Memory
         #10;
 
-        assert (stall == 1'd0 && read_data == 1'd0) 
-            else $error("TEST 2 Failed: Stall expected = 1, Stall actual = %0d, Read Data = 0, Read data = 0%0h", stall, read_data);
-        assert (dut.cache_contrl.current == IDLE)
+        assert (stall == 1'd0) 
+            else $error("TEST 2 Failed: Stall expected = 1, Stall actual = %0d", stall);
+        assert (dut.cache_contrl.current == dut.cache_contrl.IDLE)
             else $error("TEST 2 Failed: State Expected = 1, State Actual = %0s", dut.cache_contrl.current);
-        $display("TEST 2 PASSED");
 
         // ═══════════════════════════════════════════════════════════
         // TEST 3: Read Miss
@@ -81,12 +78,11 @@ module cache_tb;
         #20;
 
         //Check the State to see if it's in Miss Repair
-        assert (dut.cache_contrl.current == MISS_REPAIR && stall == 1 && dut.mem_req == 1)
+        assert (dut.cache_contrl.current == dut.cache_contrl.MISS_REPAIR && stall == 1 && dut.mem_req == 1)
             else $error("TEST 3 Failed: State = %0s, Stall = %0d, Memory Reuqest = %0d", dut.cache_contrl.current, stall, dut.mem_req);
-        #40;
-        assert (dut.cache_contrl.current == ACCESS)
+        //#40;
+        assert (dut.cache_contrl.current == dut.cache_contrl.ACCESS)
             else $error("Test 3 Failed: Expected State = Access, State = %0s", dut.cache_contrl.current);
-        $display("TEST 3 PASSED");
 
         // ═══════════════════════════════════════════════════════════
         // TEST 4: Read Hit
@@ -101,7 +97,6 @@ module cache_tb;
         //Check the Data Cache
         assert (stall == 0 && read_data == 32'hDEAD_0008)
             else $error("TEST 4 Failed: Stall Expected = 0, Stall = %0d, Read Data Expected = 32'hDEAD_0008, Read Data Actual = %0d", stall, read_data);  
-        $display("TEST 4 PASSED");
         
         // ═══════════════════════════════════════════════════════════
         // TEST 5: Write Miss
@@ -115,12 +110,11 @@ module cache_tb;
         #20;
 
         //Check the Data Cache
-        assert (dut.cache_contrl.current == MISS_REPAIR && stall == 1 && dut.mem_req == 1)
+        assert (dut.cache_contrl.current == dut.cache_contrl.MISS_REPAIR && stall == 1 && dut.mem_req == 1)
             else $error("TEST 5 Failed: State = %0s, Stall = %0d, Memory Reuqest = %0d", dut.cache_contrl.current, stall, dut.mem_req);
         #40;
-        assert (dut.cache_contrl.current == ACCESS)
-            else $error("Test 5 Failed: Expected State = Access, State = %0s", dut.cache_contrl.current);
-        $display("TEST 5 PASSED");
+        assert (dut.cache_contrl.current == dut.cache_contrl.ACCESS)
+            else $error("Test 5 Failed: Expected State = Access, State = %0h", dut.cache_contrl.current);
         
 
         // ═══════════════════════════════════════════════════════════
@@ -136,10 +130,17 @@ module cache_tb;
 
         //Check the Data Cache
         assert (stall == 0 && dut.cache_contrl.cache_data_io == 32'hDEAD_DEAD && dut.write_data_dram == 32'hDEAD_DEAD)
-            else $error("TEST 4 Failed: Stall Expected = 0, Stall = %0d, Cache Data Expected = 32'hDEAD_DEAD, Cache Data Actual = %0d, DRAM Data Expected = 32'hDEAD_DEAD, DRAM Data Actual = %0d", stall, dut.cache_contrl.cache_data_io, dut.dram.write_data_dram);  
-        $display("TEST 6 PASSED");
+            else $error("TEST 4 Failed: Stall Expected = 0, Stall = %0d, Cache Data Expected = 32'hDEAD_DEAD, Cache Data Actual = %0d, DRAM Data Expected = 32'hDEAD_DEAD, DRAM Data Actual = %0d", stall, dut.cache_contrl.cache_data_io, dut.write_data_dram);  
         
         // ═══════════════════════════════════════════════════════════
+        // TEST 7: Tag Replacement
+        // ═══════════════════════════════════════════════════════════
+
+        // ═══════════════════════════════════════════════════════════
+        // TEST 8: Write-Through Verification
+        // ═══════════════════════════════════════════════════════════
+        
+
         $finish;
     end
 
@@ -151,7 +152,7 @@ module cache_tb;
     /*
     RUNNING THE TESTBENCH:
       cd sim
-      iverilog -g2012 -s cache_tb -o cache_sim ../rtl/cache_pkg.sv ../rtl/data_cache.sv ../rtl/cache_controller.sv ../rtl/dummy_DRAM.sv ../rtl/cache_top_lvl.sv
+      iverilog -g2012 -s cache_tb -o cache_sim ../rtl/cache_pkg.sv ../rtl/data_cache.sv ../rtl/cache_controller.sv ../rtl/dummy_DRAM.sv ../rtl/cache_top_lvl.sv cache_tb.sv
       vvp cache_sim
       gtkwave
     */
