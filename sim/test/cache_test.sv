@@ -30,7 +30,7 @@ endfunction
 
 //Build Phase: Build the env, create the env configuration
 //The goal is to build and create your classes and sub-configurations
-function void cache_test::build_phase(uvm_phase phase)
+function void cache_test::build_phase(uvm_phase phase);
     super.build_phase(phase); //Build the Phase (Must always include)
     m_env_cfg = cache_env_config::type_id::create("m_env_cfg"); //Create the top-level environment config object
     m_cache_cfg = cache_agent_config::type_id::create("m_cache_cfg"); //Create the cache agent config object
@@ -38,8 +38,8 @@ function void cache_test::build_phase(uvm_phase phase)
     //Apply the "settings"
     m_cache_cfg.active = UVM_ACTIVE; //Agent is Active
     m_env_cfg.m_cache_agent_cfg = m_cache_cfg; //Set the Agent within the environment to cache agent
-    m_env_cfg.functional_coverage = 1; //Has functional coverage
-    m_env_cfg.cache_scoreboard = 1; //Has Scoreboard
+    m_env_cfg.has_coverage_collector = 1; //Has functional coverage (Coverage Collector)
+    m_env_cfg.has_cache_scoreboard = 1; //Has Scoreboard
 
     //Define the BFM Interface (Driver & Monitor) to connect to DUT
     if (!uvm_config_db #(virtual cache_monitor_bfm)::get(this, "", "cache_mon_bfm", m_cache_cfg.mon_bfm))
