@@ -20,16 +20,16 @@ endfunction
 
 function void cache_env::build_phase(uvm_phase phase);
     //Only build if the Environment has been configured
-    if (!uvm_config_db #(cache_env_config)::get(this, "*", "cache_env_config", m_env_cfg)) //GET THE CONFIG DATA
-        `uvm_fatal("Configuration error, can't get environment config. Have you set it?", UVM_HIGH)
+    if (!uvm_config_db #(cache_env_config)::get(this, "", "cache_env_config", m_env_cfg)) //GET THE CONFIG DATA
+        `uvm_fatal("Configuration error, can't get environment config. Have you set it?")
     super.build_phase(phase); //Build the Phase
 
     //Pass the Agent Config to the Agent & Insert code to configure and create the agent when cache_env_cfg is defined
-    uvm_config_db #(cache_agent_config)::set(this, "m_cache_agent*", "cache_agent_config", m_cache_cfg); //Only Cache agent can access cache agent config    
+    uvm_config_db #(cache_agent_config)::set(this, "m_cache_agent*", "cache_agent_config", m_env_cfg.m_cache_agent_cfg); //Only Cache agent can access cache agent config    
     m_cache_agent = cache_agent::type_id::create("m_cache_agent", this); //Create the Configuration Object
 
     //Only generate objects if the Environment has it configured
-    if (m_env_cfg.has_cache_scoreboard == 1) begin
+    if (m_env_cfg.has_cache_scoreboard) begin
         m_scoreboard = cache_scoreboard::type_id::create("m_scoreboard", this); //Create a Scoreboard if configured
     end
     if (m_env_cfg.has_coverage_collector) begin
