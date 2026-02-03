@@ -8,7 +8,7 @@ class cache_monitor extends uvm_monitor #(cache_seq_item);
     cache_seq_item seq_item;
 
     //Define the UVM Analysis port for broadcast
-    uvm_analysis_port #(seq_item) mon;
+    uvm_analysis_port #(seq_item) monitor_port;
 
     //Call the Constructor
     function cache_monitor::new(string name = "cache_monitor", uvm_component parent);
@@ -21,6 +21,8 @@ class cache_monitor extends uvm_monitor #(cache_seq_item);
         (!uvm_config_db #(virtual vif)::get(this, "", "vif", vif))
             `uvm_fatal(get_type_name(), "Configuration error, failed to get the Virtual Interface. Did you build it?");
         super.build_phase(phase); //Build the Phase
+        //Instantiate the monitor port
+        monitor_port = new("monitor_port", this);
     endfunction
 
     function cache_monitor::connect_phase(uvm_phase phase);
@@ -45,7 +47,7 @@ class cache_monitor extends uvm_monitor #(cache_seq_item);
                 item.stall = vif.stall;
                 item.read_data = vif.read_data;
             
-            mon.write(seq_item); //Write item to the monitor to be broadcasted
+            monitor_port.write(seq_item); //Write item to the monitor to be broadcasted
         end
     endtask
 
