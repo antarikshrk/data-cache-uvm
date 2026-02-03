@@ -40,7 +40,9 @@ endfunction
 //Connect Phase: Connecting everything from bottom-top
 function void cache_env::connect_phase(uvm_phase phase);
     super.connect_phase(phase); //Call this to build the phase
-    //Add monitor connections to scoreboard and coverage collector when defined!
+    //Connecting the monitor to the scoreboard and coverage collector
+    m_cache_agent.m_cache_mon.monitor_port.connect(m_scoreboard.scoreboard_port);
+    m_cache_agent.m_cache_mon.monitor_port.connect(m_ccollector.ccollector_port);
 endfunction
 
 task cache_env::run_phase(uvm_phase phase);
