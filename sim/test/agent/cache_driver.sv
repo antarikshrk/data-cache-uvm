@@ -29,7 +29,7 @@ class cache_driver extends uvm_driver #(cache_seq_item);
     task cache_driver::run_phase(uvm_phase phase);
         super.run_phase(phase);
         forever begin
-            seq_item = cache_seq_item::type_id::create("seq_item", this); //Create a sequence item to pass to driver
+            //seq_item = cache_seq_item::type_id::create("seq_item", this); //Create a sequence item to pass to driver
             seq_item_port.get(seq_item); //Get from the Sequencer
             drive(seq_item); //Drive is a task that connects the Virtual Interface to the Object
             seq_item_port.item_done(); //Mark end of Transaction

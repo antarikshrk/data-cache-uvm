@@ -39,6 +39,7 @@ endfunction
 function void cache_agent::connect_phase(uvm_phase phase);
     ap = m_cache_mon.ap; //Define the Monitor analysis port
     //Only connect the driver and sequencer if ACTIVE
+    m_driver.seq_item_port.connect(m_sequencer.seq_item_export);
     if (m_cache_agent_cfg.active == UVM_ACTIVE) begin
         m_cache_drv.seq_item_port.connect(m_cache_seqr.seq_item_export);
     end

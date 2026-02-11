@@ -9,12 +9,12 @@ class cache_test extends uvm_test;
 
     //Sequence Objects
     rst_sequence rst_seq;
-    /*Adding Later once Built:
-     test_sequence1 test_seq1;
-     test_sequence2 test_seq2;
-     test_sequence3 test_seq3;
-     test_sequence4 test_seq4;
-     test_sequence5 test_seq5;*/
+    //Adding Later once Built:
+    test_sequence1 test_seq1;
+    test_sequence2 test_seq2;
+    test_sequence3 test_seq3;
+    test_sequence4 test_seq4;
+    test_sequence5 test_seq5;
 
 
     //Configuration objects
